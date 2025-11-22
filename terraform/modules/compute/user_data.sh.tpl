@@ -2,7 +2,10 @@
 # Runtime configuration script for application instances
 # This script runs on first boot to configure database connection
 
-set -e
+# Enable logging to a file
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+echo "Starting user_data script execution at $(date)"
 
 # Extract hostname from endpoint (remove :port)
 DB_HOST=$(echo "${db_host}" | cut -d: -f1)
@@ -10,10 +13,28 @@ DB_NAME="${db_name}"
 DB_USER="${db_user}"
 DB_PASSWORD="${db_password}"
 
-# Wait for network to be ready
-sleep 10
+echo "Configuration extracted:"
+echo "DB_HOST: $DB_HOST"
+echo "DB_NAME: $DB_NAME"
+echo "DB_USER: $DB_USER"
+
+# Wait for network and database to be ready
+echo "Waiting for database connection..."
+MAX_RETRIES=30
+COUNT=0
+while ! mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" > /dev/null 2>&1; do
+    sleep 5
+    COUNT=$((COUNT+1))
+    if [ $COUNT -ge $MAX_RETRIES ]; then
+        echo "Timeout waiting for database connection"
+        exit 1
+    fi
+    echo "Waiting for DB... ($COUNT/$MAX_RETRIES)"
+done
+echo "Database connection established."
 
 # Create database.php with runtime configuration
+echo "Generating database.php..."
 cat > /var/www/html/database.php <<PHPEOF
 <!DOCTYPE html>
 <html>
@@ -239,12 +260,21 @@ chown www-data:www-data /var/www/html/database.php
 chmod 644 /var/www/html/database.php
 
 # Initialize database schema if tables don't exist
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -e "SHOW TABLES;" > /dev/null 2>&1
-if [ $? -ne 0 ] || [ $(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -e "SHOW TABLES;" 2>/dev/null | wc -l) -lt 2 ]; then
-    echo "Initializing database schema..." >> /var/log/user-data.log
-    mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < /var/www/html/create_database.sql 2>&1 | tee -a /var/log/user-data.log || true
+echo "Checking database schema..."
+# Check if users table exists
+TABLE_COUNT=$(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -e "SHOW TABLES LIKE 'users';" 2>/dev/null | wc -l)
+
+if [ "$TABLE_COUNT" -eq 0 ]; then
+    echo "Initializing database schema..."
+    # Remove CREATE DATABASE statement as DB already exists (managed by Terraform)
+    sed -i '/CREATE DATABASE/d' /var/www/html/create_database.sql
+    sed -i '/USE todo/d' /var/www/html/create_database.sql
+    
+    # Import schema
+    mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < /var/www/html/create_database.sql
+    echo "Schema initialized."
+else
+    echo "Database already initialized."
 fi
 
-# Log success
-echo "Database configuration created successfully at $(date)" >> /var/log/user-data.log
-echo "DB_HOST: $DB_HOST, DB_USER: $DB_USER, DB_NAME: $DB_NAME" >> /var/log/user-data.log
+echo "User data script completed successfully at $(date)"

@@ -99,7 +99,7 @@ resource "aws_autoscaling_group" "app" {
     preferences {
       min_healthy_percentage = 50
     }
-    triggers = ["tag"]
+    triggers = ["launch_template"]
   }
 
   tag {
