@@ -17,6 +17,14 @@
     state: present
   notify: Restart Apache
 
+- name: Configure DirectoryIndex
+  lineinfile:
+    path: /etc/apache2/mods-enabled/dir.conf
+    regexp: '^(\s*)DirectoryIndex.*'
+    line: '\1DirectoryIndex login.php index.php index.html index.cgi index.pl index.xhtml index.htm'
+    backrefs: yes
+  notify: Restart Apache
+
 - name: Ensure Apache is running
   service:
     name: apache2

@@ -50,6 +50,10 @@ proxecto-asir/
 3.  **Configuración de Aplicación**:
     (Consultar [Manual de Despliegue](docs/manual_despliegue.md) para el flujo completo de creación de AMI y despliegue).
 
+## Créditos
+
+La aplicación web utilizada en este proyecto (**Todo-PHP**) es un fork del trabajo original de [dhiraj-01](https://github.com/dhiraj-01/Todo-PHP), integrada como un submódulo de git para demostrar la gestión de dependencias externas.
+
 ## Licencia
 
 Proyecto educativo para el ciclo ASIR.

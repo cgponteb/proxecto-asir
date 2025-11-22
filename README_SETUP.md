@@ -14,6 +14,15 @@ En caso de no disponer de WSL instalado:
 > [!IMPORTANT]
 > **Ubicación del Proyecto**: Es fundamental clonar el repositorio dentro del sistema de archivos de Linux (ej. `~/proxecto-asir`), **NO** en la unidad de Windows (`/mnt/c/...`).
 > Trabajar en `/mnt/c/` causará errores de permisos con las claves SSH y Ansible.
+>
+> **Submódulos**: Al clonar, usa `--recursive` para descargar también el código de la aplicación:
+> ```bash
+> git clone --recursive [cgponteb/proxecto-asir](https://github.com/cgponteb/proxecto-asir.git)
+> ```
+> Si ya lo has clonado, ejecuta dentro de la carpeta:
+> ```bash
+> git submodule update --init --recursive
+> ```
 
 ## 2. Instalación de Herramientas Base
 
