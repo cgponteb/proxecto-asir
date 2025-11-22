@@ -1,0 +1,17 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install common packages
+  apt:
+    name:
+      - git
+      - curl
+      - unzip
+      - htop
+      - vim
+      - python3-pymysql
+      - mysql-client
+    state: present

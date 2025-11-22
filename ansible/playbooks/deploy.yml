@@ -1,0 +1,6 @@
+---
+- name: Deploy Application Code
+  hosts: tag_Tier_Private
+  become: yes
+  roles:
+    - app

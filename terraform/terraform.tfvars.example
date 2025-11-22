@@ -1,0 +1,9 @@
+region       = "us-east-1"
+project_name = "proxecto-asir"
+vpc_cidr     = "10.0.0.0/16"
+
+# Leave empty to use default Ubuntu 22.04
+app_ami_id = ""
+
+# Sandbox usually has 2 AZs
+azs = ["us-east-1a", "us-east-1b"]

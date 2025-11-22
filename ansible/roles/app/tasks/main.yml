@@ -1,0 +1,38 @@
+---
+- name: Copy application code
+  copy:
+    src: "{{ playbook_dir }}/../../app/TODO-Application/"
+    dest: /var/www/html/
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Configure database connection
+  template:
+    src: database.php.j2
+    dest: /var/www/html/database.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Remove default index.html
+  file:
+    path: /var/www/html/index.html
+    state: absent
+
+- name: Copy database schema
+  copy:
+    src: "{{ playbook_dir }}/../../app/TODO-Application/create_database.sql"
+    dest: /tmp/create_database.sql
+
+- name: Import database schema (if needed)
+  mysql_db:
+    login_host: "{{ db_host }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    name: "{{ db_name }}"
+    state: import
+    target: /tmp/create_database.sql
+  # Only run this if we are bootstrapping or explicitly asked. 
+  # For now, we'll run it. In production, use a migration tool.
+  ignore_errors: yes # Ignore if tables already exist

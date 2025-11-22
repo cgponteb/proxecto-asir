@@ -1,0 +1,3 @@
+# ProxyJump configuration for private instances
+# We assume 'bastion_ip' is passed as an extra variable or defined elsewhere
+ansible_ssh_common_args: '-o ProxyCommand="ssh -o StrictHostKeyChecking=no -W %h:%p -q ubuntu@{{ bastion_ip }}"'
