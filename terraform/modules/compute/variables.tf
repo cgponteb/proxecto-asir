@@ -27,3 +27,26 @@ variable "ami_id" {
   type        = string
   default     = ""
 }
+
+variable "db_endpoint" {
+  description = "RDS database endpoint (hostname:port)"
+  type        = string
+}
+
+variable "db_name" {
+  description = "Database name"
+  type        = string
+  default     = "todo"
+}
+
+variable "db_user" {
+  description = "Database master username"
+  type        = string
+  default     = "admin"
+}
+
+variable "db_password" {
+  description = "Database master password"
+  type        = string
+  sensitive   = true
+}

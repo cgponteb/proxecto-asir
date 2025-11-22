@@ -1,3 +1,11 @@
+#!/bin/bash
+# Runtime configuration script for application instances
+# This script runs on first boot to configure database connection
+
+set -e
+
+# Create database.php with runtime configuration
+cat > /var/www/html/database.php <<'PHPEOF'
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +34,7 @@
     else if(isset($_POST['Save']))
     {
         $conn = connectdatabase();
-        $sql = "UPDATE {{ db_name }}.tasks SET done = 0";
+        $sql = "UPDATE ${db_name}.tasks SET done = 0";
         $result = mysqli_query($conn, $sql); 
         mysqli_close($conn);
 
@@ -43,7 +51,7 @@
     }
 
     function connectdatabase() {
-        return mysqli_connect("{{ db_host }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");
+        return mysqli_connect("${db_host}", "${db_user}", "${db_password}", "${db_name}");
     }
 
     function loggedin() {
@@ -63,7 +71,7 @@
     function userexist($username) 
     {
         $conn = connectdatabase();
-        $sql = "SELECT * FROM {{ db_name }}.users WHERE username = '".$username."'"; 
+        $sql = "SELECT * FROM ${db_name}.users WHERE username = '".$username."'"; 
         $result = mysqli_query($conn,$sql);
         mysqli_close($conn);
 
@@ -76,7 +84,7 @@
     function validuser($username, $password) 
     {
         $conn = connectdatabase();
-        $sql = "SELECT * FROM {{ db_name }}.users WHERE username = '".$username."'AND password = '".$password."'"; 
+        $sql = "SELECT * FROM ${db_name}.users WHERE username = '".$username."'AND password = '".$password."'"; 
         $result = mysqli_query($conn,$sql);
         mysqli_close($conn);
 
@@ -96,19 +104,19 @@
 
     function updatepassword($username, $password) {
         $conn = connectdatabase();
-        $sql = "UPDATE {{ db_name }}.users SET password = '".$password."' WHERE username = '".$username."';";
+        $sql = "UPDATE ${db_name}.users SET password = '".$password."' WHERE username = '".$username."';";
         $result = mysqli_query($conn, $sql);
 
-        $_SESSION['error'] = "<br> &nbsp; Password Updated !! ";
+        $_SESSION['error'] = "<br> &nbsp; Password Updated!! ";
         header('location:todo.php');
     }
 
     function deleteaccount($username) {
         $conn = connectdatabase();
-        $sql = "DELETE FROM {{ db_name }}.tasks WHERE username = '".$username."';";
+        $sql = "DELETE FROM ${db_name}.tasks WHERE username = '".$username."';";
         $result = mysqli_query($conn, $sql);
 
-        $sql = "DELETE FROM {{ db_name }}.users WHERE username = '".$username."';";
+        $sql = "DELETE FROM ${db_name}.users WHERE username = '".$username."';";
         $result = mysqli_query($conn, $sql);
 
         $_SESSION['error'] = "&nbsp; Account Deleted !! ";
@@ -121,7 +129,7 @@
         if(!userexist($username))
         {
             $conn = connectdatabase();
-            $sql = "INSERT INTO {{ db_name }}.users (username, password) VALUES ('".$username."','".$password."')";
+            $sql = "INSERT INTO ${db_name}.users (username, password) VALUES ('".$username."','".$password."')";
             $result = mysqli_query($conn, $sql);
 
             $_SESSION["username"] = $username;
@@ -195,7 +203,7 @@
     function addTodoItem($username, $todo_text) 
     {
         $conn = connectdatabase();
-        $sql = "INSERT INTO {{ db_name }}.tasks(username, task, done) VALUES ('".$username."','".$todo_text."',0);";
+        $sql = "INSERT INTO ${db_name}.tasks(username, task, done) VALUES ('".$username."','".$todo_text."',0);";
         $result = mysqli_query($conn, $sql);
         mysqli_close($conn);
     }
@@ -203,7 +211,7 @@
     function deleteTodoItem($username, $todo_id) 
     {
         $conn = connectdatabase();
-        $sql = "DELETE FROM {{ db_name }}.tasks WHERE taskid = ".$todo_id." and username = '".$username."';";
+        $sql = "DELETE FROM ${db_name}.tasks WHERE taskid = ".$todo_id." and username = '".$username."';";
         $result = mysqli_query($conn, $sql);
         mysqli_close($conn);
     }
@@ -211,8 +219,16 @@
     function updateDone($todo_id) 
     {
         $conn = connectdatabase();
-        $sql = "UPDATE {{ db_name }}.tasks SET done = '1' WHERE (taskid = '".$todo_id."');";
+        $sql = "UPDATE ${db_name}.tasks SET done = '1' WHERE (taskid = '".$todo_id."');";
         $result = mysqli_query($conn, $sql);   
         mysqli_close($conn);
     }
 ?>
+PHPEOF
+
+# Set proper permissions
+chown www-data:www-data /var/www/html/database.php
+chmod 644 /var/www/html/database.php
+
+# Log success
+echo "Database configuration created successfully" >> /var/log/user-data.log

@@ -42,6 +42,12 @@ module "compute" {
   app_sg_id          = module.security.app_sg_id
   target_group_arn   = module.alb.target_group_arn
   ami_id             = var.app_ami_id
+
+  # Database configuration for runtime
+  db_endpoint = module.database.db_endpoint
+  db_name     = module.database.db_name
+  db_user     = module.database.db_user
+  db_password = module.database.db_password
 }
 
 module "dns" {

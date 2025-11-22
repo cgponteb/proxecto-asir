@@ -58,11 +58,12 @@ resource "aws_launch_template" "app" {
     security_groups             = [var.app_sg_id]
   }
 
-  user_data = base64encode(<<-EOF
-              #!/bin/bash
-              echo "Hello from Launch Template"
-              EOF
-  )
+  user_data = base64encode(templatefile("${path.module}/user_data.sh.tpl", {
+    db_host     = var.db_endpoint
+    db_name     = var.db_name
+    db_user     = var.db_user
+    db_password = var.db_password
+  }))
 
   tag_specifications {
     resource_type = "instance"
