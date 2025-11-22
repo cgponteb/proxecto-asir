@@ -46,7 +46,7 @@ module "compute" {
   # Database configuration for runtime
   db_endpoint = module.database.db_endpoint
   db_name     = module.database.db_name
-  db_user     = module.database.db_user
+  db_user     = module.database.db_username
   db_password = module.database.db_password
 }
 
@@ -57,5 +57,5 @@ module "dns" {
   vpc_id       = module.networking.vpc_id
   db_endpoint  = module.database.db_endpoint
   alb_dns_name = module.alb.alb_dns_name
-  alb_zone_id  = module.alb.alb_zone_id # Need to output this from ALB module
+  alb_zone_id  = module.alb.alb_zone_id
 }
