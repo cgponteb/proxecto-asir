@@ -45,8 +45,8 @@ sudo apt install -y ansible
 Instalación de dependencias para AWS:
 
 ```bash
-sudo apt install -y python3-pip
-pip3 install boto3 botocore
+# En Ubuntu 24.04+, instalar librerías de Python vía apt para evitar conflictos (PEP 668)
+sudo apt install -y python3-boto3 python3-botocore
 # Instalar la colección de AWS y MySQL para Ansible
 ansible-galaxy collection install amazon.aws community.mysql
 ```

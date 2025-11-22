@@ -35,3 +35,13 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# AWS CLI Installer
+aws/
+awscliv2.zip
+
+# SSH Keys
+*.pem
+
+# Ansible
+*.retry
