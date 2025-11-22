@@ -11,6 +11,10 @@ En caso de no disponer de WSL instalado:
 3.  Reiniciar el equipo si se solicita.
 4.  Al iniciarse la terminal de Ubuntu, configurar el usuario y contraseña.
 
+> [!IMPORTANT]
+> **Ubicación del Proyecto**: Es fundamental clonar el repositorio dentro del sistema de archivos de Linux (ej. `~/proxecto-asir`), **NO** en la unidad de Windows (`/mnt/c/...`).
+> Trabajar en `/mnt/c/` causará errores de permisos con las claves SSH y Ansible.
+
 ## 2. Instalación de Herramientas Base
 
 En la terminal de Ubuntu (WSL), actualizar e instalar herramientas comunes:
