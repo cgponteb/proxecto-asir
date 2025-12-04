@@ -85,9 +85,9 @@ resource "aws_autoscaling_group" "app" {
   health_check_type         = "ELB"
   health_check_grace_period = 300
 
-  min_size         = 1
+  min_size         = 2
   max_size         = 3
-  desired_capacity = 1
+  desired_capacity = 2
 
   launch_template {
     id      = aws_launch_template.app.id
