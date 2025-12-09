@@ -5,7 +5,7 @@ Guía de presentación para la defensa del proyecto (10 de diciembre).
 ## 1. Introducción (2 min)
 *   **Objetivo**: Demostración de infraestructura de alta disponibilidad, escalable y automatizada.
 *   **Stack Tecnológico**: Terraform (IaC), Ansible (Gestión de Configuración), AWS.
-*   **Arquitectura**: Presentación del diagrama de red.
+*   **Arquitectura**: Presentación del [diagrama de red](./infrastructure.md).
     *   **VPC**: Segmentación de red (Subredes Públicas/Privadas).
     *   **Acceso**: Load Balancer (Público) y Bastion Host (Gestión).
     *   **Seguridad**: Aplicación y Base de Datos aisladas en subredes privadas.

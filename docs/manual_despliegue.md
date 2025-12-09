@@ -4,7 +4,7 @@ Este documento detalla los procedimientos para desplegar, actualizar y destruir 
 
 ## 1. Despliegue Inicial de Infraestructura
 
-El primer paso consiste en la creación de la red, la base de datos y el balanceador de carga.
+El primer paso consiste en la creación de la red, la base de datos y el balanceador de carga. Puedes consultar el [diagrama de arquitectura](./infrastructure.md) para más detalle.
 
 1.  **Acceder al directorio de infraestructura**:
     ```bash

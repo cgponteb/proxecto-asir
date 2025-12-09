@@ -8,7 +8,10 @@
     db_name: "todo"
     db_user: "admin"
     # db_password should be passed as extra var for security
-    
+    ansible_ssh_common_args: >-
+      {% if bastion_ip is defined %}
+      -o ProxyCommand="ssh -o StrictHostKeyChecking=no -W %h:%p -q ubuntu@{{ bastion_ip }} -i {{ ansible_ssh_private_key_file | default('../terraform/proxecto-asir-key.pem') }}"
+      {% endif %}
   roles:
     - common
     - webserver
