@@ -42,6 +42,7 @@ module "compute" {
   app_sg_id          = module.security.app_sg_id
   target_group_arn   = module.alb.target_group_arn
   ami_id             = var.app_ami_id
+  instance_count     = var.app_instance_count
 
   # Database configuration for runtime
   db_endpoint = module.database.db_endpoint
