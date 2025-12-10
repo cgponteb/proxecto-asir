@@ -1,0 +1,3 @@
+# ProxyJump configuration for build instances (accessed via Bastion)
+# 'bastion_ip' must be passed as extra var or defined elsewhere
+ansible_ssh_common_args: '-o ProxyCommand="ssh -o StrictHostKeyChecking=no -W %h:%p -q ubuntu@{{ bastion_ip }}"'

@@ -42,6 +42,22 @@ resource "aws_instance" "bastion" {
 
   tags = {
     Name = "${var.project_name}-bastion"
+    Tier = "Bastion"
+  }
+}
+
+# --- Build Server ---
+resource "aws_instance" "build_server" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
+  subnet_id     = var.private_subnet_ids[0]
+  key_name      = aws_key_pair.generated.key_name
+
+  vpc_security_group_ids = [var.app_sg_id]
+
+  tags = {
+    Name = "${var.project_name}-build-server"
+    Tier = "Build"
   }
 }
 
@@ -69,6 +85,7 @@ resource "aws_launch_template" "app" {
     resource_type = "instance"
     tags = {
       Name = "${var.project_name}-app"
+      Tier = "App"
     }
   }
 

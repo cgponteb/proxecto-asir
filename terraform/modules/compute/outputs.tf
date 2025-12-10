@@ -9,3 +9,7 @@ output "asg_name" {
 output "launch_template_id" {
   value = aws_launch_template.app.id
 }
+
+output "build_server_private_ip" {
+  value = aws_instance.build_server.private_ip
+}

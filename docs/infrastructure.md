@@ -18,22 +18,28 @@ graph TD
                 App1[App Instance 1]
                 App2[App Instance 2]
             end
+            BuildServer[Build Server]
             RDS[(RDS Database)]
         end
     end
 
     User((User)) -->|HTTP/HTTPS| ALB
+    Admin((Admin)) -->|SSH| Bastion
+    
     ALB -->|Forward| App1
     ALB -->|Forward| App2
     
     Bastion -->|SSH| App1
     Bastion -->|SSH| App2
+    Bastion -->|SSH| BuildServer
+    Bastion -->|SQL| RDS
     
     App1 -->|SQL| RDS
     App2 -->|SQL| RDS
     
     App1 -->|Outbound| NAT
     App2 -->|Outbound| NAT
+    BuildServer -->|Outbound| NAT
     
     classDef public fill:#d4edda,stroke:#28a745,color:black
     classDef private fill:#cce5ff,stroke:#004085,color:black

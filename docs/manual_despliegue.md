@@ -30,20 +30,20 @@ Al finalizar, se obtendrán los datos de acceso necesarios, como `alb_dns_name` 
 
 Para permitir que el Auto Scaling Group lance instancias con la aplicación pre-configurada, es necesario generar una AMI (Amazon Machine Image).
 
-1.  **Lanzamiento de Instancia Temporal**:
-    *   Se puede utilizar una instancia manual o el Bastion Host (si dispone de acceso a internet y recursos suficientes).
-    *   Recomendación: Lanzar una instancia Ubuntu t3.micro en la subred pública y anotar su IP pública.
+13.  **Lanzamiento de Instancia de Construcción**:
+    La infraestructura incluye un servidor dedicado (`build-server`) en la subred privada para este propósito. No es necesario lanzar instancias manuales.
 
 2.  **Ejecución de Ansible**:
     Desde el entorno local (WSL), acceder al directorio `ansible`:
     ```bash
     cd ansible
     ```
-    Ejecutar el playbook `build_ami.yml` contra la instancia temporal:
+    Ejecutar el playbook `build_ami.yml`. El inventario dinámico detectará automáticamente la instancia `build-server` (etiquetada como `Tier: Build`).
+    Solo es necesario proporcionar la IP del Bastion para el túnel SSH:
     ```bash
-    ansible-playbook playbooks/build_ami.yml -i <IP_TEMPORAL>, -u ubuntu --private-key ../terraform/proxecto-asir-key.pem -e "bastion_ip=<IP_BASTION>"
+    ansible-playbook playbooks/build_ami.yml -e "bastion_ip=<IP_BASTION>"
     ```
-    *Nota: La coma después de la IP es necesaria para indicar que se trata de una lista de hosts. sustituye `<IP_BASTION>` por el valor de `bastion_public_ip` obtenido en el paso anterior.*
+    *Nota: Sustituye `<IP_BASTION>` por el valor de `bastion_public_ip` obtenido en el paso 1.*
 
 3.  **Generación de la AMI**:
     Desde la consola de AWS, seleccionar la instancia configurada y ejecutar "Actions > Image and templates > Create image".

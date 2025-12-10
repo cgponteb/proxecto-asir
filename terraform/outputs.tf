@@ -23,3 +23,8 @@ output "private_zone_domain" {
   description = "Private Route53 Zone Name"
   value       = "${var.project_name}.internal"
 }
+
+output "build_server_private_ip" {
+  description = "Private IP of the Build Server"
+  value       = module.compute.build_server_private_ip
+}

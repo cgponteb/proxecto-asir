@@ -1,6 +1,6 @@
 ---
 - name: Configure Base Instance for AMI
-  hosts: all
+  hosts: tier_Build
   become: yes
   vars:
     # These should be passed via extra vars or inventory
