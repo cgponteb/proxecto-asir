@@ -10,12 +10,14 @@ graph LR
     subgraph VPC [VPC]
         
         subgraph Public_Subnets [Public Subnets]
+            direction TB
             ALB[Application Load Balancer]
             Bastion[Bastion Host]
             NAT[NAT Gateway]
         end
         
         subgraph Private_Subnets [Private Subnets]
+            direction TB
             subgraph ASG [Auto Scaling Group]
                 App1[App Instance 1]
                 App2[App Instance 2]
@@ -46,6 +48,9 @@ graph LR
     App1 -->|Outbound| NAT
     App2 -->|Outbound| NAT
     BuildServer -->|Outbound| NAT
+
+    %% Force Layout Rank
+    NAT ~~~ BuildServer
     
     classDef public fill:#d4edda,stroke:#28a745,color:black
     classDef private fill:#cce5ff,stroke:#004085,color:black
