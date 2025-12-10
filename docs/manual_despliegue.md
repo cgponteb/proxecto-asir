@@ -41,9 +41,9 @@ Para permitir que el Auto Scaling Group lance instancias con la aplicación pre-
     ```
     Ejecutar el playbook `build_ami.yml` contra la instancia temporal:
     ```bash
-    ansible-playbook playbooks/build_ami.yml -i <IP_TEMPORAL>, -u ubuntu --private-key ../terraform/proxecto-asir-key.pem
+    ansible-playbook playbooks/build_ami.yml -i <IP_TEMPORAL>, -u ubuntu --private-key ../terraform/proxecto-asir-key.pem -e "bastion_ip=<IP_BASTION>"
     ```
-    *Nota: La coma después de la IP es necesaria para indicar que se trata de una lista de hosts.*
+    *Nota: La coma después de la IP es necesaria para indicar que se trata de una lista de hosts. sustituye `<IP_BASTION>` por el valor de `bastion_public_ip` obtenido en el paso anterior.*
 
 3.  **Generación de la AMI**:
     Desde la consola de AWS, seleccionar la instancia configurada y ejecutar "Actions > Image and templates > Create image".
