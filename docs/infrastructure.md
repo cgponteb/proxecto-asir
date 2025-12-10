@@ -3,9 +3,11 @@
 This diagram represents the AWS infrastructure defined in the Terraform configuration.
 
 ```mermaid
-graph TD
+graph LR
+    User((User))
+    Admin((Admin))
+
     subgraph VPC [VPC]
-        direction TB
         
         subgraph Public_Subnets [Public Subnets]
             ALB[Application Load Balancer]
@@ -23,9 +25,11 @@ graph TD
         end
     end
 
-    User((User)) -->|HTTP/HTTPS| ALB
-    Admin((Admin)) -->|SSH| Bastion
+    %% Access Layer
+    User -->|HTTP/HTTPS| ALB
+    Admin -->|SSH| Bastion
     
+    %% Public to Private Routing
     ALB -->|Forward| App1
     ALB -->|Forward| App2
     
@@ -34,9 +38,11 @@ graph TD
     Bastion -->|SSH| BuildServer
     Bastion -->|SQL| RDS
     
+    %% Internal Connections
     App1 -->|SQL| RDS
     App2 -->|SQL| RDS
     
+    %% Outbound Connectivity
     App1 -->|Outbound| NAT
     App2 -->|Outbound| NAT
     BuildServer -->|Outbound| NAT
